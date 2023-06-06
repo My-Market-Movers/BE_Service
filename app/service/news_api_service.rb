@@ -1,7 +1,7 @@
 class NewsApiService 
   def self.search_articles(keyword)
-    response = conn.get("/v2/everything??") do |req|
-      req.params["q"] = "#{keyword}"
+    response = conn.get("/v2/everything?") do |req|
+      req.params["q"] = keyword
       req.params["pageSize"] = 2
     end
     
