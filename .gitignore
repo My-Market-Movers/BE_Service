@@ -31,3 +31,4 @@
 
 /coverage.data
 /coverage/
+/spec/fixtures/vcr_cassettes/
