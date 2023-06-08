@@ -5,7 +5,7 @@ class NewsApiService
       req.params["pageSize"] = 2
     end
     
-    data = JSON.parse(response.body, symbolize_names: true)
+    JSON.parse(response.body, symbolize_names: true)
   end
   
   def self.conn
