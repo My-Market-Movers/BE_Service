@@ -33,5 +33,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_04_175209) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "users_table", id: :integer, default: nil, force: :cascade do |t|
+    t.text "user_name"
+    t.text "user_email"
+    t.index ["user_email"], name: "users_table_user_email_key", unique: true
+  end
+
   add_foreign_key "user_stocks", "users"
 end

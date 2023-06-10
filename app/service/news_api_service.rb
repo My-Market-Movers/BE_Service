@@ -4,7 +4,6 @@ class NewsApiService
       req.params["q"] = keyword
       req.params["pageSize"] = 2
     end
-    
     JSON.parse(response.body, symbolize_names: true)
   end
   
