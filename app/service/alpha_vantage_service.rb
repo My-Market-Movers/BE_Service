@@ -7,8 +7,6 @@ class AlphaVantageService
     parsed_symbolized(response)
   end
 
-
-
   def self.domain
     Faraday.new("https://www.alphavantage.co") do |req|
       req.params["apikey"] = ENV["alpha_vantage_key"]

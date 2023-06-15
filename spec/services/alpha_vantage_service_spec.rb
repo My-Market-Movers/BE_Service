@@ -2,19 +2,42 @@ require 'rails_helper'
 
 RSpec.describe AlphaVantageService, :vcr do 
   describe "#weekly_adjusted_data returns a stock's specific data", :vcr do 
+    before(:each) do
+      @ticker = "pypl"
+      @response = AlphaVantageService.weekly_adjusted_data(@ticker)
+    end
+    
     it "returns a json response with top level keys: Meta Data and Weekly Adjusted Time Series" do
-      response = AlphaVantageService.weekly_adjusted_data("pypl")
-      require 'pry';binding.pry
-      expect(response).to be_a(Hash)
-      expect(response.keys).to eq([:"Meta Data", :"Weekly Adjusted Time Series"])
+      expect(@ticker).to be_a(String)
+      
+      expect(@response).to be_a(Hash)
+      expect(@response.keys).to eq([:"Meta Data", :"Weekly Adjusted Time Series"])
+
+      expect(@response[:"Meta Data"]).to be_a(Hash)
+      expect(@response[:"Meta Data"].keys).to eq([:"1. Information", :"2. Symbol", :"3. Last Refreshed", :"4. Time Zone"])
+      
+      expect(@response[:"Meta Data"][:"2. Symbol"]).to eq(@ticker)
+
+      expect(@response[:"Weekly Adjusted Time Series"]).to be_a(Hash)
+    end
+
+    it "responds with weekly breakdowns of stock values that are numerical within the key :Weekly Adjusted Time Series" do
+      @response[:"Weekly Adjusted Time Series"].each do |week, values|
+        expect(values.keys).to eq([:"1. open", :"2. high", :"3. low", :"4. close", :"5. adjusted close", :"6. volume", :"7. dividend amount"])
+        values.each do |value|
+          expect(value.last).to match(/^\d+(\.\d+)?$/) #the string response matches, either, an Integer or Floats
+        end
+      end
 
       # method to calculate when the earliest data is from
       #get the end of month for the 7 yr 11 months ago
       #this is the last key in the returned has (the earliest data)
-      target_date = Date.today.prev_year(7).prev_month(11)
-      last_day_of_month = target_date.end_of_month.day
-      formatted_date = target_date.strftime("%Y-%m")
-      formatted_date_with_last_day = "#{formatted_date}-#{last_day_of_month}"
       
+      # target_date = Date.today.prev_year(7).prev_month(11)
+      # last_day_of_month = target_date.end_of_month.day
+      # formatted_date = target_date.strftime("%Y-%m")
+      # formatted_date_with_last_day = "#{formatted_date}-#{last_day_of_month}"
+      
+    end
   end
 end
